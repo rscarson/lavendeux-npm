@@ -1,0 +1,16 @@
+{
+  "name": "lavendeux",
+  "version": "1.0.0",
+  "description": "Wrapper for Lavendeux extensions",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest dev",
+    "robotest": "vitest run"
+  },
+  "author": "Richard Carson",
+  "license": "MIT",
+
+  "devDependencies": {
+    "vitest": "^0.29.7"
+  }
+}
