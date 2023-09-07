@@ -2,6 +2,8 @@ This package provides an interface for creating lavendeux extensions.
 
 The lavendeux-parser is a parsing engine for rust, acting as the backend for [Lavendeux](https://rscarson.github.io/lavendeux/)
 
+Create a new extension using `npx lavendeux init`. The extension can be compiled for use with Lavendeux using `npx lavendeux build`
+
 The parser supports runtime loaded JS extensions for adding functionality in 2 ways:
 - Functions, which can be called like so: `add(2, 3)`
 - Decorators, which format the output of a statement and can be called like so: `22 @usd`
