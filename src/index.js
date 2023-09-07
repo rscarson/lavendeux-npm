@@ -1,6 +1,6 @@
 "use strict";
 
-import { name, author, version } from './package.json';
+globalThis.extension = () => globalThis.extensionDetails;
 
 class LavendeuxValue {
     /**
@@ -31,7 +31,7 @@ class LavendeuxValue {
      */
     static parse(inValue) {
         let type = LavendeuxValue.typeOf(inValue);
-        let value = inValue[type];
+        let value = Object.values(inValue)[0];
         switch (type) {
             case 'Object':
                 Object.keys(value).forEach(k => {
@@ -66,7 +66,7 @@ class LavendeuxValue {
             return {'String': value};
         } else if (Number.isInteger(value)) {
             return {'Integer': value};
-        } else if (Number(value) === value) {
+        } else if (new Number(value) === value) {
             return {'Float': value};
         } else return {'Boolean': value == true};
     }
@@ -82,15 +82,45 @@ class LavendeuxArgument {
     }
 
     /**
+     * Parse a value and cooerce it to the right type
+     * @param {Object} inValue 
+     * @returns value
+     */
+    parse(inValue) {
+        let value = LavendeuxValue.parse(inValue);
+        switch (this.type) {
+            case 'Integer': return Math.floor( new Number(value) );
+            case 'Numeric':
+            case 'Float': 
+                return new Number(value);
+            case 'String': return `${value}`;
+            case 'Boolean': return value == true;
+            case 'Array': return (Array.isArray(value))
+                ? value
+                : [value];
+            case 'Object': return (typeof value === 'object')
+                ? value
+                : {0: value};
+        }
+    }
+
+    /**
      * Validate a value against this argument
      * @param {Object} inValue 
      * @returns boolean
      */
     validate(inValue) {
         if (this.type.length === 0) return true;
-        else return this.type.includes(
-            LavendeuxValue.typeOf(inValue)
-        );
+        else switch(this.type) {
+            case 'Integer':
+            case 'Float':
+            case 'Numeric':
+                return ('Integer', 'Float').includes(this.type);
+            
+            default:
+                // Other types can always be cooerced
+                return true;
+        }
     }
 }
 
@@ -208,7 +238,7 @@ class LavendeuxFunction {
             if (expectedArgs[k] && !expectedArgs[k].validate(argv[k])) {
                 throw new Error(`Invalid value for parameter ${k+1} of ${this.name}: Expected ${argv[k].type}`);
             }
-            argv[k] = LavendeuxValue.parse(argv[k]);
+            argv[k] = expectedArgs[k] ? expectedArgs[k].parse(argv[k]) : LavendeuxValue.parse(argv[k]);
         });
 
         // Populate the state
@@ -229,7 +259,7 @@ class LavendeuxFunction {
 
     register() {
         let callbackName = this.registeredName();
-        globalThis.extension.functions[this.name] = callbackName;
+        globalThis.extensionDetails.functions[this.name] = callbackName;
         globalThis[`${callbackName}_args`] = this.args;
         globalThis[callbackName] = (argv) => this.call(argv);
     }
@@ -250,7 +280,7 @@ class LavendeuxDecorator extends LavendeuxFunction {
 
     register() {
         let callbackName = this.registeredName();
-        globalThis.extension.decorators[this.name] = callbackName;
+        globalThis.extensionDetails.decorators[this.name] = callbackName;
         globalThis[`${callbackName}_args`] = this.args;
         globalThis[callbackName] = (argv) => {
             // Wrap as a string
@@ -288,23 +318,15 @@ export class Lavendeux {
     /**
      * Build a new extension
      */
-    constructor(_name, _author, _version="1.0.0") {
-        globalThis.extension = {
-            name: `${_name}`,
-            author: `${_author}`,
-            version: `${_version}`,
+    constructor(name, author, version="1.0.0") {
+        globalThis.extensionDetails = {
+            name: `${name}`,
+            author: `${author}`,
+            version: `${version}`,
 
             functions: {},
             decorators: {}
         };
-    }
-
-    /**
-     * Build an extension from the contents of package.json
-     * @returns A new extension instance
-     */
-    static fromPackage() {
-        return new Lavendeux(name, author, version);
     }
 
     /**
