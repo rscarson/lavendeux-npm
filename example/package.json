@@ -1,0 +1,19 @@
+{
+  "main": "src/index.js",
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vite": "^4.2.1",
+    "vitest": "^0.29.7"
+  },
+  "name": "example_extension",
+  "version": "1.0.0",
+  "description": "A sample Lavendeux extension",
+  "author": "@rscarson",
+  "license": "ISC",
+  "dependencies": {
+    "lavendeux": "file:.."
+  }
+}

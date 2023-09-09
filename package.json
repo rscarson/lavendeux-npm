@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "test": "vitest dev",
-    "robotest": "vitest run"
+    "robotest": "vitest run",
+    "coverage": "vitest run --coverage"
   },
   "bin": {
     "lavendeux": "./src/cmd.js"
