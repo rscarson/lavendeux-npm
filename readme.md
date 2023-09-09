@@ -22,9 +22,9 @@ function addFunction(left, right) {
      return left + right;
 }
 
-let extension = new Lavendeux(name, author, version);
-extension.addNumericDecorator('usd', usdDecorator);
-extension.addFunction('add', addFunction)
+let lavendeux = new Lavendeux(name, author, version);
+lavendeux.addNumericDecorator('usd', usdDecorator);
+lavendeux.addFunction('add', addFunction)
     .addNumericArgument()
     .addNumericArgument();
 ```
@@ -38,8 +38,8 @@ function statefulFunction() {
     return state.nextInt++;
 }
 
-let extension = new Lavendeux(name, author, version);
-extension.addFunction('next', statefulFunction);
+let lavendeux = new Lavendeux(name, author, version);
+lavendeux.addFunction('next', statefulFunction);
 ```
 
 Function arguments can be any of the following:
@@ -65,3 +65,5 @@ Similarly, decorators are also typed using the same rules as above, and can be o
 - addArrayDecorator:   Supplied value will be cooerced into an array
 - addObjectDecorator:  Supplied value will be cooerced into an object
 - addDecorator:        Any type is accepted, and no type cooersion occurs
+
+Also - do not place anything in the global scope named 'extension' as the Lavendeux parser looks for a global function by that name in order to load the extension
