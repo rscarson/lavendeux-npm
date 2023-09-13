@@ -52,14 +52,18 @@ export class Lavendeux {
      * @param {String} name Function name to retrieve
      * @returns 
      */
-    getFunctionCallback = (name) => this.allHandlers[ this.functions[name] ].callback;
+    getFunctionCallback(name) {
+        this.allHandlers[ this.functions[name] ].callback;
+    }
 
     /**
      * Get the inner callback for a registered decorator
      * @param {String} name Function name to retrieve
      * @returns 
      */
-    getDecoratorCallback = (name) => this.allHandlers[ this.decorators[name] ].callback;
+    getDecoratorCallback(name) {
+        this.allHandlers[ this.decorators[name] ].callback;
+    }
 
     /**
      * Add a callable function
@@ -79,49 +83,63 @@ export class Lavendeux {
      * @param {String} name The name of the new function
      * @param {*} callback Callback function to execute
      */
-    addIntegerFunction = (name, callback) => this.addFunction(name, callback, Types.Integer);
+    addIntegerFunction(name, callback) {
+        return this.addFunction(name, callback, Types.Integer);
+    }
 
     /**
      * Add a callable function that returns the float type
      * @param {String} name The name of the new function
      * @param {*} callback Callback function to execute
      */
-    addFloatFunction = (name, callback) => this.addFunction(name, callback, Types.Float);
+    addFloatFunction(name, callback) {
+        return this.addFunction(name, callback, Types.Float);
+    }
 
     /**
      * Add a callable function that returns the integer or float type
      * @param {String} name The name of the new function
      * @param {*} callback Callback function to execute
      */
-    addNumericFunction = (name, callback) => this.addFunction(name, callback, Types.Numeric);
+    addNumericFunction(name, callback) {
+        return this.addFunction(name, callback, Types.Numeric);
+    }
 
     /**
      * Add a callable function that returns the string type
      * @param {String} name The name of the new function
      * @param {*} callback Callback function to execute
      */
-    addStringFunction = (name, callback) => this.addFunction(name, callback, Types.String);
+    addStringFunction(name, callback) {
+        return this.addFunction(name, callback, Types.String);
+    }
 
     /**
      * Add a callable function that returns the boolean type
      * @param {String} name The name of the new function
      * @param {*} callback Callback function to execute
      */
-    addBooleanFunction = (name, callback) => this.addFunction(name, callback, Types.Boolean);
+    addBooleanFunction(name, callback) {
+        return this.addFunction(name, callback, Types.Boolean);
+    }
 
     /**
      * Add a callable function that returns the array type
      * @param {String} name The name of the new function
      * @param {*} callback Callback function to execute
      */
-    addArrayFunction = (name, callback) => this.addFunction(name, callback, Types.Array);
+    addArrayFunction(name, callback) {
+        return this.addFunction(name, callback, Types.Array);
+    }
 
     /**
      * Add a callable function that returns the object type
      * @param {String} name The name of the new function
      * @param {*} callback Callback function to execute
      */
-    addObjectFunction = (name, callback) => this.addFunction(name, callback, Types.Object);
+    addObjectFunction(name, callback) {
+        return this.addFunction(name, callback, Types.Object);
+    }
 
     /**
      * Add a callable decorator
@@ -143,47 +161,60 @@ export class Lavendeux {
      * @param {String} name The name of the new decorator
      * @param {*} callback Callback function to execute
      */
-    addIntegerDecorator = (name, callback) => this.addDecorator(name, callback, Types.Integer);
+    addIntegerDecorator(name, callback) {
+        this.addDecorator(name, callback, Types.Integer);
+    }
 
     /**
      * Add a callable decorator that wraps the float type
      * @param {String} name The name of the new decorator
      * @param {*} callback Callback function to execute
      */
-    addFloatDecorator = (name, callback) => this.addDecorator(name, callback, Types.Float);
+    addFloatDecorator(name, callback) {
+        this.addDecorator(name, callback, Types.Float);
+    }
 
     /**
      * Add a callable decorator that wraps the integer or float type
      * @param {String} name The name of the new decorator
      * @param {*} callback Callback function to execute
      */
-    addNumericDecorator = (name, callback) => this.addDecorator(name, callback, Types.Numeric);
+    addNumericDecorator(name, callback) {
+        this.addDecorator(name, callback, Types.Numeric);
+    }
 
     /**
      * Add a callable decorator that wraps the string type
      * @param {String} name The name of the new decorator
      * @param {*} callback Callback function to execute
      */
-    addStringDecorator = (name, callback) => this.addDecorator(name, callback, Types.String);
+    addStringDecorator(name, callback) {
+        this.addDecorator(name, callback, Types.String);
+    }
 
     /**
      * Add a callable decorator that wraps the boolean type
      * @param {String} name The name of the new decorator
      * @param {*} callback Callback function to execute
      */
-    addBooleanDecorator = (name, callback) => this.addDecorator(name, callback, Types.Boolean);
+    addBooleanDecorator(name, callback) {
+        this.addDecorator(name, callback, Types.Boolean);
+    }
 
     /**
      * Add a callable decorator that wraps the array type
      * @param {String} name The name of the new decorator
      * @param {*} callback Callback function to execute
      */
-    addArrayDecorator = (name, callback) => this.addDecorator(name, callback, Types.Array);
+    addArrayDecorator(name, callback) {
+        this.addDecorator(name, callback, Types.Array);
+    }
 
     /**
      * Add a callable decorator that wraps the object type
      * @param {String} name The name of the new decorator
      * @param {*} callback Callback function to execute
      */
-    addObjectDecorator = (name, callback) => this.addDecorator(name, callback, Types.Object);
-}
+    addObjectDecorator(name, callback) {
+        this.addDecorator(name, callback, Types.Object);
+    }}

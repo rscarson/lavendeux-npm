@@ -10,23 +10,39 @@ The parser supports runtime loaded JS extensions for adding functionality in 2 w
 
 Below is a simple example of an extension that would implement the add() and @usd features above:
 ```javascript
-import { name, author, version } from './package.json';
+import { name, author, version } from '../package.json';
 import { Lavendeux } from 'lavendeux';
 
-function usdDecorator(input) {
+// Create a new extension from the configuration in package.json
+let instance = new Lavendeux(name, author, version);
+
+/**
+ * Formats a given value as a string
+ * A decorator that accepts a numeric value
+ * Can be called from Lavendeux with @usd
+ * @param {Number} input The value to decorate
+ * @returns Formatted result
+ */
+instance.addNumericDecorator('usd', (input) => {
     let n = (Math.round(input * 100) / 100).toFixed(2);
      return `$${n}`;
-}
+});
 
-function addFunction(left, right) {
-     return left + right;
-}
+/**
+ * A function accepting 2 numeric arguments
+ * Can be called from Lavendeux with add(5, 3)
+ * @param {Number} left An argument to the function
+ * @param {Number} right An argument to the function
+ * @returns The resulting value
+ */
+instance.addFunction('add', (left, right) => {
+    return left + right;
+})
+.addNumericArgument()
+.addNumericArgument();
 
-let lavendeux = new Lavendeux(name, author, version);
-lavendeux.addNumericDecorator('usd', usdDecorator);
-lavendeux.addFunction('add', addFunction)
-    .addNumericArgument()
-    .addNumericArgument();
+// Make the extension visible to the lavendeux parser
+Lavendeux.register(instance);
 ```
 
 Functions can also access variables set from within Lavendeux, in order to act statefully:
@@ -38,8 +54,11 @@ function statefulFunction() {
     return state.nextInt++;
 }
 
-let lavendeux = new Lavendeux(name, author, version);
-lavendeux.addFunction('next', statefulFunction);
+let instance = new Lavendeux(name, author, version);
+instance.addFunction('next', statefulFunction);
+
+// Make the extension visible to the lavendeux parser
+Lavendeux.register(instance);
 ```
 
 Function arguments can be any of the following:

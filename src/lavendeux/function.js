@@ -43,38 +43,52 @@ export class LavendeuxFunction {
     /**
      * Add an integer typed argument to the function
      */
-    addIntegerArgument = () => this.addArgument(Types.Integer);
-
+    addIntegerArgument() {
+        return this.addArgument(Types.Integer);
+    }
+    
     /**
      * Add a float typed argument to the function
      */
-    addFloatArgument = () => this.addArgument(Types.Float);
-
+    addFloatArgument() {
+        return this.addArgument(Types.Float);
+    }
+    
     /**
      * Add a int or float typed argument to the function
      */
-    addNumericArgument = () => this.addArgument(Types.Numeric);
-
+    addNumericArgument() {
+        return this.addArgument(Types.Numeric);
+    }
+    
     /**
      * Add a string typed argument to the function
      */
-    addStringArgument = () => this.addArgument(Types.String);
-
+    addStringArgument() {
+        return this.addArgument(Types.String);
+    }
+    
     /**
      * Add a boolean typed argument to the function
      */
-    addBooleanArgument = () => this.addArgument(Types.Boolean);
-
+    addBooleanArgument() {
+        return this.addArgument(Types.Boolean);
+    }
+    
     /**
      * Add an array typed argument to the function
      */
-    addArrayArgument = () => this.addArgument(Types.Array);
-
+    addArrayArgument() {
+        return this.addArgument(Types.Array);
+    }
+    
     /**
      * Add an object typed argument to the function
      */
-    addObjectArgument = () => this.addArgument(Types.Object);
-
+    addObjectArgument() {
+        return this.addArgument(Types.Object);
+    }
+    
     /** 
      * Validates and decodes arguments
      * Will throw an error if argument count or types are unexpected
