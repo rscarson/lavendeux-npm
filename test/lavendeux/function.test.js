@@ -15,61 +15,45 @@ globalThis.setState = (state) => {
 }
 
 describe('LavendeuxFunction', () => {
-    test('registeredName', () => {
-        let func = new LavendeuxFunction('test', Types.Any, () => {});
-        expect(func.registeredName()).toBe('lavendeuxfunction_test');
+    test('getRegisteredName', () => {
+        let s1 = LavendeuxFunction.getRegisteredName('test');
+        expect(s1).toContain('lavendeuxfunction_test');
+        expect(s1).not.toBe(LavendeuxFunction.getRegisteredName('test'));
     });
     
-    test('_addArgument', () => {
+    test('addArgument', () => {
         let func = new LavendeuxFunction('test', Types.String, () => {return 5;});
-        expect(func.call([])).toStrictEqual({'String': '5'});
+        expect(func.argumentTypes.length).toBe(0);
 
         func.addArgument();
-        expect(globalThis.lavendeuxfunction_test_args[globalThis.lavendeuxfunction_test_args.length - 1].type)
-            .toBe(Types.Any);
+        expect(func.argumentTypes.pop()).toBe(Types.Any);
 
         func.addArrayArgument();
-        expect(globalThis.lavendeuxfunction_test_args[globalThis.lavendeuxfunction_test_args.length - 1].type)
-            .toBe(Types.Array);
+        expect(func.argumentTypes.pop()).toBe(Types.Array);
 
         func.addBooleanArgument();
-        expect(globalThis.lavendeuxfunction_test_args[globalThis.lavendeuxfunction_test_args.length - 1].type)
-            .toBe(Types.Boolean);
+        expect(func.argumentTypes.pop()).toBe(Types.Boolean);
 
         func.addFloatArgument();
-        expect(globalThis.lavendeuxfunction_test_args[globalThis.lavendeuxfunction_test_args.length - 1].type)
-            .toBe(Types.Float);
+        expect(func.argumentTypes.pop()).toBe(Types.Float);
 
         func.addIntegerArgument();
-        expect(globalThis.lavendeuxfunction_test_args[globalThis.lavendeuxfunction_test_args.length - 1].type)
-            .toBe(Types.Integer);
+        expect(func.argumentTypes.pop()).toBe(Types.Integer);
 
         func.addNumericArgument();
-        expect(globalThis.lavendeuxfunction_test_args[globalThis.lavendeuxfunction_test_args.length - 1].type)
-            .toBe(Types.Numeric);
+        expect(func.argumentTypes.pop()).toBe(Types.Numeric);
 
         func.addObjectArgument();
-        expect(globalThis.lavendeuxfunction_test_args[globalThis.lavendeuxfunction_test_args.length - 1].type)
-            .toBe(Types.Object);
+        expect(func.argumentTypes.pop()).toBe(Types.Object);
 
         func.addStringArgument();
-        expect(globalThis.lavendeuxfunction_test_args[globalThis.lavendeuxfunction_test_args.length - 1].type)
-            .toBe(Types.String);
-
-        func.addArgument(true);
-        expect(globalThis.lavendeuxfunction_test_args[globalThis.lavendeuxfunction_test_args.length - 1].optional)
-            .toBe(true);
-            
-        expect(() => {
-            func.addArgument(true);
-        }).toThrowError();
+        expect(func.argumentTypes.pop()).toBe(Types.String);
     });
     
     test('call', () => {
         let result = false;
         let func = new LavendeuxFunction('test', Types.Any, () => {result = true;})
-        .addIntegerArgument()
-        .addStringArgument(true);
+        .addIntegerArgument();
 
         func.call([
             {'Integer': 5}
@@ -119,16 +103,5 @@ describe('LavendeuxFunction', () => {
         globalThis.setState = (state) => {
             globalThis.state = state;
         }
-    });
-    
-    test('register', () => {
-        let result = false;
-        let func = new LavendeuxFunction('test', Types.Any, () => {result = true;});
-        expect(globalThis.extensionDetails.functions.test).toBe('lavendeuxfunction_test');
-        expect(typeof globalThis.lavendeuxfunction_test).toBe('function');
-        expect(globalThis.lavendeuxfunction_test_args).toStrictEqual([]);
-        
-        globalThis.lavendeuxfunction_test([{'Integer': 1}]);
-        expect(result).toBe(true);
     });
 });

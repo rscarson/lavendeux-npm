@@ -9,17 +9,17 @@ export const Types = {
     Any:""
 }
     
-    /**
+/**
  * A value for use with Lavendeux
  */
 export class LavendeuxValue {
     /**
      * Determine the type of an incoming value
-     * @param {Object} inValue 
+     * @param {Object} wrappedValue 
      * @returns Type of the value given
      */
-    static typeOf(inValue) {
-        let inType = Object.keys(inValue);
+    static typeOf(wrappedValue) {
+        let inType = Object.keys(wrappedValue);
         return inType.length ? inType[0] : false;
     }
 
@@ -38,7 +38,7 @@ export class LavendeuxValue {
                 return Number(value);
             case 'Boolean': return !!value;
             case 'String':
-                if (Array.isArray(value) || typeof value === 'object') {
+                if (typeof value === 'object') {
                     return JSON.stringify(value);
                 } else {
                     return `${value}`;
@@ -52,10 +52,8 @@ export class LavendeuxValue {
                     return [value];
                 }
             case 'Object':
-                if (Array.isArray(value)) {
+                if (typeof value === 'object') {
                     return Object.assign({}, value);
-                } else if (typeof value === 'object') {
-                    return value;
                 } else {
                     return {0: value};
                 }
@@ -65,37 +63,26 @@ export class LavendeuxValue {
 
     /**
      * Return a raw value
-     * @param {Object} inValue 
+     * @param {Object} wrappedValue 
      * @returns value
      */
-    static unwrap(inValue) {
-        let type = this.typeOf(inValue);
-        let value = Object.values(inValue)[0];
+    static unwrap(wrappedValue, targetType=Types.Any) {
+        let type = this.typeOf(wrappedValue);
+        let value = Object.values(wrappedValue)[0];
         switch (type) {
             case 'Object':
-                let result = {};
-                for (const pair of value) {
-                    let k = this.unwrap(pair[0]);
-                    let v = this.unwrap(pair[1]);
-                    switch (this.typeOf(pair[0])) {
-                        case 'Object':
-                        case 'Array':
-                            k = JSON.stringify(k);
-                            break;
-                        default:
-                    }
-                    result[k] = v;
-                }
-                value = result;
+                value = Object.values(value).map(([k,v]) => [
+                    this.unwrap(k, Types.String),
+                    this.unwrap(v)
+                ]);
+                value = Object.fromEntries(value);
                 break;
             case 'Array':
-                Object.keys(value).forEach(k => {
-                    value[k] = this.unwrap(value[k]);
-                });
+                value = value.map(e => this.unwrap(e));
                 break;
         }
 
-        return value;
+        return LavendeuxValue.cooerce(value, targetType);
     }
 
     /**

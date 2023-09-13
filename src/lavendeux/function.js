@@ -1,5 +1,4 @@
 import { LavendeuxValue, Types } from './value';
-import { LavendeuxArgument } from './argument';
 
 /**
  * A callable function for use in Lavendeux
@@ -7,120 +6,130 @@ import { LavendeuxArgument } from './argument';
 export class LavendeuxFunction {
     constructor(name, returnType, callback) {
         this.name = name;
-        this.args = [];
         this.callback = callback;
-        this.argListLocked = false;
+
+        this.argumentTypes = []
         this.returnType = returnType;
 
-        this.register();
-    }
-
-    registeredName() {
-        return `lavendeuxfunction_${this.name}`;
+        this.registeredName = LavendeuxFunction.getRegisteredName(name);
     }
 
     /**
-     * Add an integer typed argument to the function
-     * @param {Boolean} optional True if the argument is optional.
+     * Will return true if the state functions are available
+     * Will be false in very old versions of Lavendeux
      */
-    addIntegerArgument(optional=false) {
-        return this._addArgument(Types.Integer, optional);
+    static isStateAvailable() {
+        return (typeof getState === "function");
     }
 
     /**
-     * Add a float typed argument to the function
-     * @param {Boolean} optional True if the argument is optional.
+     * Get a unique identifier for a function
+     * @returns A unique name for this function
      */
-    addFloatArgument(optional=false) {
-        return this._addArgument(Types.Float, optional);
-    }
-
-    /**
-     * Add a int or float typed argument to the function
-     * @param {Boolean} optional True if the argument is optional.
-     */
-    addNumericArgument(optional=false) {
-        return this._addArgument(Types.Numeric, optional);
-    }
-
-    /**
-     * Add a string typed argument to the function
-     * @param {Boolean} optional True if the argument is optional.
-     */
-    addStringArgument(optional=false) {
-        return this._addArgument(Types.String, optional);
-    }
-
-    /**
-     * Add a boolean typed argument to the function
-     * @param {Boolean} optional True if the argument is optional.
-     */
-    addBooleanArgument(optional=false) {
-        return this._addArgument(Types.Boolean, optional);
-    }
-
-    /**
-     * Add an array typed argument to the function
-     * @param {Boolean} optional True if the argument is optional.
-     */
-    addArrayArgument(optional=false) {
-        return this._addArgument(Types.Array, optional);
-    }
-
-    /**
-     * Add an object typed argument to the function
-     * @param {Boolean} optional True if the argument is optional.
-     */
-    addObjectArgument(optional=false) {
-        return this._addArgument(Types.Object, optional);
+    static getRegisteredName(name) {
+        let r = (Math.random() + 1).toString(36).substring(8);
+        return `lavendeuxfunction_${name}_${r}`;
     }
 
     /**
      * Add an untyped argument to the function
      * @param {Boolean} optional True if the argument is optional.
      */
-    addArgument(optional=false) {
-        return this._addArgument(Types.Any, optional);
-    }
-
-    /**
-     * Add a parameter to the function
-     * @param {String} type The type of value expected (Types)
-     * @param {Boolean} optional True if the argument is optional.
-     * @returns This object, for call chaining
-     */
-    _addArgument(type, optional=false) {
-        let callbackName = this.registeredName();
-        if (this.argListLocked) {
-            throw new Error(`Optional arguments must be the last parameter in a function!`);
-        }
-        globalThis[`${callbackName}_args`].push(
-            new LavendeuxArgument(type, optional)
-        );
-        this.argListLocked = optional;
+    addArgument(type=Types.Any) {
+        this.argumentTypes.push(type);
         return this;
     }
 
-    call(argv) {
-        let callbackName = this.registeredName();
-        let expectedArgs = globalThis[`${callbackName}_args`];
+    /**
+     * Add an integer typed argument to the function
+     */
+    addIntegerArgument = () => this.addArgument(Types.Integer);
 
-        // Validate number of arguments
-        let hasOptional = expectedArgs.length ? expectedArgs[expectedArgs.length - 1].optional : false;
-        if (argv.length < expectedArgs.length - hasOptional?1:0) {
-            throw new Error(`Missing a parameter for ${this.name}: Expected ${expectedArgs.length} arguments`);
-        }
+    /**
+     * Add a float typed argument to the function
+     */
+    addFloatArgument = () => this.addArgument(Types.Float);
 
-        // Validate type of arguments and decode them
-        Object.keys(argv).forEach(k => {
-            if (expectedArgs[k] && !expectedArgs[k].validate(argv[k])) {
-                throw new Error(`Invalid value for parameter ${k+1} of ${this.name}: Expected ${argv[k].type}`);
+    /**
+     * Add a int or float typed argument to the function
+     */
+    addNumericArgument = () => this.addArgument(Types.Numeric);
+
+    /**
+     * Add a string typed argument to the function
+     */
+    addStringArgument = () => this.addArgument(Types.String);
+
+    /**
+     * Add a boolean typed argument to the function
+     */
+    addBooleanArgument = () => this.addArgument(Types.Boolean);
+
+    /**
+     * Add an array typed argument to the function
+     */
+    addArrayArgument = () => this.addArgument(Types.Array);
+
+    /**
+     * Add an object typed argument to the function
+     */
+    addObjectArgument = () => this.addArgument(Types.Object);
+
+    /** 
+     * Validates and decodes arguments
+     * Will throw an error if argument count or types are unexpected
+     * @returns Unwrapped arguments
+     */
+    decodeArguments(argv) {
+        // Validate argument count
+        if (argv.length < this.argumentTypes.length) {
+            throw new Error(`Missing a parameter for ${this.name}: Expected ${this.argumentTypes.length} arguments`);
+        } 
+
+        // Validate argument types
+        this.argumentTypes.forEach((type, i) => {
+            let _type = LavendeuxValue.typeOf(argv[i]);
+            if (
+                ( type == Types.Numeric && !([Types.Integer, Types.Float].includes(_type)) ) ||
+                [Types.Integer, Types.Float].includes(type) && type != _type
+            ) {
+                throw new Error(`Invalid value for parameter ${i+1} of ${this.name}: Expected ${argv[i].type}`);
             }
-            argv[k] = expectedArgs[k] ? expectedArgs[k].unwrap(argv[k]) : LavendeuxValue.unwrap(argv[k]);
         });
 
+        // Uwrap and cooerce
+        return argv.map((wrappedValue, i) => {
+            let type = argv[i] ? argv[i] : Types.Any;
+            return LavendeuxValue.unwrap(wrappedValue, type);
+        });
+    }
+
+    /**
+     * Return an object containing the variables available in the parser
+     * @returns State
+     */
+    getState() {
+        return LavendeuxFunction.isStateAvailable() 
+            ? getState() 
+            : {};
+    }
+
+    /**
+     * Update the parser state
+     * @param {Object} state 
+     */
+    setState(state) {
+        if (LavendeuxFunction.isStateAvailable()) {
+            setState(state);
+        }
+    }
+
+    call(argv) {
+        // Validate and decode arguments
+        argv = this.decodeArguments(argv);
+
         // Populate the state
-        let state = (typeof getState === "function") ? getState() : {};
+        let state = this.getState()
         
         // Run the inner callback function
         let value = LavendeuxValue.wrap(
@@ -129,17 +138,8 @@ export class LavendeuxFunction {
         );
 
         // Return the new state
-        if (typeof setState === "function") {
-            setState(state);
-        }
+        this.setState(state);
 
         return value;
-    }
-
-    register() {
-        let callbackName = this.registeredName();
-        globalThis.extensionDetails.functions[this.name] = callbackName;
-        globalThis[`${callbackName}_args`] = this.args;
-        globalThis[callbackName] = (argv) => this.call(argv);
     }
 }

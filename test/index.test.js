@@ -4,6 +4,7 @@ import { Lavendeux } from '../src';
 describe('Lavendeux', () => {
     test('import', () => {
         let extension = new Lavendeux('test1', 'test2', 'test3');
-        expect(globalThis.extension()).toStrictEqual(globalThis.extensionDetails);
+        Lavendeux.register(extension);
+        expect(typeof globalThis.extension).toBe('function');
     });
 });

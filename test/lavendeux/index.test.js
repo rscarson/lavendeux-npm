@@ -1,11 +1,13 @@
 import { test, expect, describe } from 'vitest';
-import { Lavendeux } from '../../src/lavendeux/index';
+import { Lavendeux, Types } from '../../src/lavendeux/index';
 
 describe('Lavendeux', () => {
     test('constructor', () => {
         let extension = new Lavendeux('test1', 'test2', 'test3');
+        Lavendeux.register(extension);
+
         expect(typeof globalThis.extension).toBe('function');
-        expect(globalThis.extensionDetails).toStrictEqual({
+        expect(globalThis.extension()).toMatchObject({
             name: `test1`,
             author: `test2`,
             version: `test3`,
@@ -13,11 +15,9 @@ describe('Lavendeux', () => {
             functions: {},
             decorators: {}
         });
-
-        expect(globalThis.extension()).toStrictEqual(globalThis.extensionDetails);
     });
 
-    test('_addFunction', () => {
+    test('addFunction', () => {
         let extension = new Lavendeux('test1', 'test2', 'test3');
         expect(extension.addIntegerFunction('test', () => {}).returnType).toBe('Integer');
         expect(extension.addFloatFunction('test', () => {}).returnType).toBe('Float');
@@ -29,15 +29,15 @@ describe('Lavendeux', () => {
         expect(extension.addFunction('test', () => {}).returnType).toBe('');
     });
 
-    test('_addDecorator', () => {
+    test('addDecorator', () => {
         let extension = new Lavendeux('test1', 'test2', 'test3');
-        expect(extension.addIntegerDecorator('test', () => {}).args[0].type).toBe('Integer');
-        expect(extension.addFloatDecorator('test', () => {}).args[0].type).toBe('Float');
-        expect(extension.addNumericDecorator('test', () => {}).args[0].type).toBe('Numeric');
-        expect(extension.addStringDecorator('test', () => {}).args[0].type).toBe('String');
-        expect(extension.addBooleanDecorator('test', () => {}).args[0].type).toBe('Boolean');
-        expect(extension.addArrayDecorator('test', () => {}).args[0].type).toBe('Array');
-        expect(extension.addObjectDecorator('test', () => {}).args[0].type).toBe('Object');
-        expect(extension.addDecorator('test', () => {}).args[0].type).toBe('');
+        expect(extension.addIntegerDecorator('test', () => {}).argumentTypes[0]).toBe(Types.Integer);
+        expect(extension.addFloatDecorator('test', () => {}).argumentTypes[0]).toBe(Types.Float);
+        expect(extension.addNumericDecorator('test', () => {}).argumentTypes[0]).toBe(Types.Numeric);
+        expect(extension.addStringDecorator('test', () => {}).argumentTypes[0]).toBe(Types.String);
+        expect(extension.addBooleanDecorator('test', () => {}).argumentTypes[0]).toBe(Types.Boolean);
+        expect(extension.addArrayDecorator('test', () => {}).argumentTypes[0]).toBe(Types.Array);
+        expect(extension.addObjectDecorator('test', () => {}).argumentTypes[0]).toBe(Types.Object);
+        expect(extension.addDecorator('test', () => {}).argumentTypes[0]).toBe(Types.Any);
     });
 });

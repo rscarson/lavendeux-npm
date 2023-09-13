@@ -2,15 +2,17 @@ import { test, expect, describe } from 'vitest';
 import '../src/index';
 
 describe('Extension', () => {
+    test('registered', () => {
+
+    });
+
     test('add(left, right)', () => {
-        expect(globalThis.lavendeuxfunction_add([
-            {'Integer': 2}, {'Integer': 3}, 
-        ])).toStrictEqual({'Integer': 5});
+        let f = globalThis.extension().getFunctionCallback('add');
+        expect(f(2, 3)).toStrictEqual(5);
     });
     
     test('@usd', () => {
-        expect(globalThis.lavendeuxdecorator_usd([
-            {'Integer': 2}, 
-        ])).toStrictEqual({'String': '$2.00'});
+        let f = globalThis.extension().getDecoratorCallback('usd');
+        expect(f(2)).toStrictEqual('$2.00');
     });
 });
