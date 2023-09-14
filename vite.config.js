@@ -7,7 +7,13 @@ export default defineConfig({
     __VERSION__: `"${version}"`,
   },
   test: {
-    exclude: [...configDefaults.exclude, "**/template/**", "**/example/**"],
+    exclude: [
+      ...configDefaults.exclude, 
+      "**/template/**", 
+      "**/example/**",
+      "**/template_ts/**", 
+      "**/example_ts/**"
+    ],
     coverage: {
       provider: 'v8'
     },
