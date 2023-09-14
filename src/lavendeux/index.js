@@ -162,7 +162,7 @@ export class Lavendeux {
      * @param {*} callback Callback function to execute
      */
     addIntegerDecorator(name, callback) {
-        this.addDecorator(name, callback, Types.Integer);
+        return this.addDecorator(name, callback, Types.Integer);
     }
 
     /**
@@ -171,7 +171,7 @@ export class Lavendeux {
      * @param {*} callback Callback function to execute
      */
     addFloatDecorator(name, callback) {
-        this.addDecorator(name, callback, Types.Float);
+        return this.addDecorator(name, callback, Types.Float);
     }
 
     /**
@@ -180,7 +180,7 @@ export class Lavendeux {
      * @param {*} callback Callback function to execute
      */
     addNumericDecorator(name, callback) {
-        this.addDecorator(name, callback, Types.Numeric);
+        return this.addDecorator(name, callback, Types.Numeric);
     }
 
     /**
@@ -189,7 +189,7 @@ export class Lavendeux {
      * @param {*} callback Callback function to execute
      */
     addStringDecorator(name, callback) {
-        this.addDecorator(name, callback, Types.String);
+        return this.addDecorator(name, callback, Types.String);
     }
 
     /**
@@ -198,7 +198,7 @@ export class Lavendeux {
      * @param {*} callback Callback function to execute
      */
     addBooleanDecorator(name, callback) {
-        this.addDecorator(name, callback, Types.Boolean);
+        return this.addDecorator(name, callback, Types.Boolean);
     }
 
     /**
@@ -207,7 +207,7 @@ export class Lavendeux {
      * @param {*} callback Callback function to execute
      */
     addArrayDecorator(name, callback) {
-        this.addDecorator(name, callback, Types.Array);
+        return this.addDecorator(name, callback, Types.Array);
     }
 
     /**
@@ -216,5 +216,5 @@ export class Lavendeux {
      * @param {*} callback Callback function to execute
      */
     addObjectDecorator(name, callback) {
-        this.addDecorator(name, callback, Types.Object);
+        return this.addDecorator(name, callback, Types.Object);
     }}

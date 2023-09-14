@@ -71,7 +71,7 @@ export class LavendeuxValue {
         let value = Object.values(wrappedValue)[0];
         switch (type) {
             case 'Object':
-                value = Object.entries(value).map(([k,v]) => [
+                value = value.map(([k,v]) => [
                     this.unwrap(k, Types.String),
                     this.unwrap(v)
                 ]);
