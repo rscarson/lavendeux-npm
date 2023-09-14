@@ -6,14 +6,6 @@ import { Lavendeux } from '../../src/lavendeux/index';
 // Set up the extension globals
 new Lavendeux('test', 'test');
 
-globalThis.state = {};
-globalThis.getState = () => {
-    return globalThis.state;
-}
-globalThis.setState = (state) => {
-    globalThis.state = state;
-}
-
 describe('LavendeuxFunction', () => {
     test('getRegisteredName', () => {
         let s1 = LavendeuxFunction.getRegisteredName('test');
@@ -96,12 +88,20 @@ describe('LavendeuxFunction', () => {
         ]);
         expect(result).toBe(true);
 
-        globalThis.state = {};
+        globalThis._state = {};
         globalThis.getState = () => {
-            return globalThis.state;
+            return globalThis._state;
         }
         globalThis.setState = (state) => {
-            globalThis.state = state;
+            globalThis._state = state;
         }
+        
+        setState({'foo': {'String': 'bar'}});
+        func = new LavendeuxFunction('test', Types.Any, (state) => {
+            expect(state.foo).toBe('bar');
+            state.foo = 'bar2';
+        });
+        func.call([]);
+        expect(getState().foo).toStrictEqual({'String': 'bar2'});
     });
 });

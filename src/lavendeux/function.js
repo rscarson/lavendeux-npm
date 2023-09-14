@@ -123,9 +123,14 @@ export class LavendeuxFunction {
      * @returns State
      */
     getState() {
-        return LavendeuxFunction.isStateAvailable() 
+        const state = LavendeuxFunction.isStateAvailable() 
             ? getState() 
             : {};
+
+        Object.keys(state).map(k => {
+            state[k] = LavendeuxValue.unwrap(state[k]);
+        });
+        return state;
     }
 
     /**
@@ -134,6 +139,9 @@ export class LavendeuxFunction {
      */
     setState(state) {
         if (LavendeuxFunction.isStateAvailable()) {
+            Object.keys(state).map(k => {
+                state[k] = LavendeuxValue.wrap(state[k]);
+            });
             setState(state);
         }
     }
@@ -147,7 +155,7 @@ export class LavendeuxFunction {
         
         // Run the inner callback function
         let value = LavendeuxValue.wrap(
-            this.callback(...argv),
+            this.callback(...argv, state),
             this.returnType
         );
 

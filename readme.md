@@ -50,7 +50,7 @@ Functions can also access variables set from within Lavendeux, in order to act s
 import { name, author, version } from './package.json';
 import { Lavendeux } from 'lavendeux';
 
-function statefulFunction() {
+function statefulFunction(state) {
     return state.nextInt++;
 }
 
