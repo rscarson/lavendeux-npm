@@ -1,8 +1,10 @@
 This package provides an interface for creating lavendeux extensions.
+It essentially functions as an API wrapper, providing bidirectional type conversion, as well as function argument resolution logic
 
 The lavendeux-parser is a parsing engine for rust, acting as the backend for [Lavendeux](https://rscarson.github.io/lavendeux/)
 
-Create a new extension using `npx lavendeux init`. The extension can be compiled for use with Lavendeux using `npx lavendeux build`
+Create a new extension using `npx lavendeux init <extension_name>`. The extension can be compiled for use with Lavendeux using `npx lavendeux build`
+Use `npx lavendeux init <extension_name> --typescript` if you wish to create a typescript template instead
 
 The parser supports runtime loaded JS extensions for adding functionality in 2 ways:
 - Functions, which can be called like so: `add(2, 3)`

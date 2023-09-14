@@ -14,6 +14,7 @@ program
 .description('Creates a new extension')
 .argument('<name>', 'Name of the new extension')
 .option('--force', 'Continue even if the directory is not empty')
+.option('--typescript', 'Generate using the typescript template')
 .action(LavendeuxCommand.commandInit);
 
 program

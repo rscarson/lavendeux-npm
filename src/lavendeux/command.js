@@ -15,8 +15,7 @@ class LavendeuxCommand {
     
         "devDependencies": {
           "vite": "^4.2.1",
-          "vitest": "^0.29.7",
-          "lavendeux": "^1.0.0"
+          "vitest": "^0.29.7"
         }
     };
     static defaultReadme = (config) => [
@@ -67,9 +66,13 @@ class LavendeuxCommand {
      * Creates and fills out package.json
      * Generates the configuration details needed by later steps
      */
-    initPackage(name) {
+    initPackage(name, ts=false) {
         const targetFile = this.filePath('package.json');
         this.config.name = name;
+
+        if (ts) {
+            this.config.main = 'src/index.ts';
+        }
 
         // Write out defaults
         const jsonConfig = JSON.stringify(this.config, null, 2);
@@ -81,6 +84,10 @@ class LavendeuxCommand {
         // Install deps
         LavendeuxCommand.spawnNpm(['install']);
         LavendeuxCommand.spawnNpm(['install', 'lavendeux']);
+
+        if (ts) {
+            LavendeuxCommand.spawnNpm(['install', 'typescript']);
+        }
 
         // Read the result
         this.config = JSON.parse(fs.readFileSync(targetFile, 'utf8'));
@@ -99,8 +106,9 @@ class LavendeuxCommand {
     /**
      * Copy in the remaining files from the template
      */
-    copyTemplate() {
-        const scrDir = this.filePath('../../template', __dirname);
+    copyTemplate(ts=false) {
+        const template_path = ts ? '../../template' : '../../template_ts';
+        const scrDir = this.filePath(template_path, __dirname);
         fs.copySync(scrDir, this.targetDir);
     }
 
@@ -117,7 +125,7 @@ class LavendeuxCommand {
             process.exit(1);
         }
 
-        palette.initPackage(name);
+        palette.initPackage(name, options.typescript);
         palette.writeReadme();
         palette.copyTemplate();
     }
