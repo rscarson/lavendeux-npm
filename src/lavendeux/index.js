@@ -2,6 +2,7 @@
 
 import { Types } from './value';
 import { LavendeuxFunction } from './function';
+import { argv } from 'process';
 
 export { Types } from './value';
 
@@ -75,6 +76,7 @@ export class Lavendeux {
         let f = new LavendeuxFunction(name, expectedType, callback);
         this.allHandlers[f.registeredName] = f;
         this.functions[name] = f.registeredName;
+        globalThis[f.registeredName] = (argv) => f.call(argv);
         return f;
     }
 
@@ -153,6 +155,7 @@ export class Lavendeux {
 
         this.allHandlers[f.registeredName] = f;
         this.decorators[name] = f.registeredName;
+        globalThis[f.registeredName] = (argv) => f.call(argv);
         return f;
     }
 
