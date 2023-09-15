@@ -45,16 +45,29 @@ export class Lavendeux {
     }
 
     static register(instance) {
-        globalThis.extension = () => instance;
+        globalThis.extension = () => instance.definition;
         Object.keys(instance.allHandlers).forEach(f => {
             globalThis[f.registeredName] = (argv) => f.call(argv);
         });
     }
 
     /**
+     * Returns the structure expected by lavendeux
+     */
+    definition() {
+        return {
+            name: this.name,
+            author: this.author,
+            version: this.version,
+            functions: this.functions,
+            decorators: this.decorators
+        };
+    }
+
+    /**
      * Get the inner callback for a registered function
      * @param {String} name Function name to retrieve
-     * @returns 
+     * @returns Callback function 
      */
     getFunctionCallback(name) {
         this.allHandlers[ this.functions[name] ].callback;
@@ -63,7 +76,7 @@ export class Lavendeux {
     /**
      * Get the inner callback for a registered decorator
      * @param {String} name Function name to retrieve
-     * @returns 
+     * @returns Callback function 
      */
     getDecoratorCallback(name) {
         this.allHandlers[ this.decorators[name] ].callback;
