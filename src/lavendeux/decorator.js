@@ -1,5 +1,5 @@
 import { LavendeuxFunction } from './function';
-import { Types } from './value';
+import { Types, LavendeuxValue } from './value';
 
 export class LavendeuxDecorator extends LavendeuxFunction {
     constructor(name, argumentType, callback) {
@@ -17,6 +17,9 @@ export class LavendeuxDecorator extends LavendeuxFunction {
     }
 
     call(arg) {
-        return super.call([arg]);
+        return LavendeuxValue.unwrap(
+            super.call([arg]),
+            Types.String
+        );
     }
 }
