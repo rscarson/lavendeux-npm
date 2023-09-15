@@ -112,7 +112,7 @@ export class LavendeuxFunction {
 
         // Uwrap and cooerce
         return argv.map((wrappedValue, i) => {
-            let type = argv[i] ? argv[i] : Types.Any;
+            let type = this.argumentTypes[i] ? this.argumentTypes[i] : Types.Any;
             return LavendeuxValue.unwrap(wrappedValue, type);
         });
     }
