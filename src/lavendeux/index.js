@@ -46,6 +46,9 @@ export class Lavendeux {
 
     static register(instance) {
         globalThis.extension = () => instance;
+        Object.keys(instance.allHandlers).forEach(f => {
+            globalThis[f.registeredName] = (argv) => f.call(argv);
+        });
     }
 
     /**
@@ -76,7 +79,6 @@ export class Lavendeux {
         let f = new LavendeuxFunction(name, expectedType, callback);
         this.allHandlers[f.registeredName] = f;
         this.functions[name] = f.registeredName;
-        globalThis[f.registeredName] = (argv) => f.call(argv);
         return f;
     }
 
@@ -150,12 +152,11 @@ export class Lavendeux {
      * @param {String} expectedType The type expected by the decorator (Types)
      */
     addDecorator(name, callback, expectedType=Types.Any) {
-        let f = new LavendeuxFunction(name, Types.String, callback);
+        let f = new LavendeuxFunction(`@${name}`, Types.String, callback);
         f.addArgument(expectedType);
 
         this.allHandlers[f.registeredName] = f;
         this.decorators[name] = f.registeredName;
-        globalThis[f.registeredName] = (argv) => f.call(argv);
         return f;
     }
 

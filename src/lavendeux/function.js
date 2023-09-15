@@ -5,7 +5,7 @@ import { LavendeuxValue, Types } from './value';
  */
 export class LavendeuxFunction {
     constructor(name, returnType, callback) {
-        this.name = name;
+        this.name = name.replace('@', '');
         this.callback = callback;
 
         this.argumentTypes = []
@@ -27,8 +27,7 @@ export class LavendeuxFunction {
      * @returns A unique name for this function
      */
     static getRegisteredName(name) {
-        let r = (Math.random() + 1).toString(36).substring(8);
-        return `lavendeuxfunction_${name}_${r}`;
+        return `lavendeuxfunction_${name}`;
     }
 
     /**

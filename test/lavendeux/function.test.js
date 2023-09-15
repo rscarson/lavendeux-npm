@@ -9,8 +9,10 @@ new Lavendeux('test', 'test');
 describe('LavendeuxFunction', () => {
     test('getRegisteredName', () => {
         let s1 = LavendeuxFunction.getRegisteredName('test');
-        expect(s1).toContain('lavendeuxfunction_test');
-        expect(s1).not.toBe(LavendeuxFunction.getRegisteredName('test'));
+        expect(s1).toBe(LavendeuxFunction.getRegisteredName('test'));
+        
+        let s2 = LavendeuxFunction.getRegisteredName('@test');
+        expect(s2).toBe(LavendeuxFunction.getRegisteredName('@test'));
     });
     
     test('addArgument', () => {
