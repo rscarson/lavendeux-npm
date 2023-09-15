@@ -2,7 +2,7 @@
 
 import { Types } from './value';
 import { LavendeuxFunction } from './function';
-import { argv } from 'process';
+import { LavendeuxDecorator } from './decorator';
 
 export { Types } from './value';
 
@@ -45,8 +45,8 @@ export class Lavendeux {
     }
 
     static register(instance) {
-        globalThis.extension = () => instance.definition;
-        Object.keys(instance.allHandlers).forEach(f => {
+        globalThis.extension = () => instance.definition();
+        Object.values(instance.allHandlers).forEach(f => {
             globalThis[f.registeredName] = (argv) => f.call(argv);
         });
     }
@@ -165,9 +165,7 @@ export class Lavendeux {
      * @param {String} expectedType The type expected by the decorator (Types)
      */
     addDecorator(name, callback, expectedType=Types.Any) {
-        let f = new LavendeuxFunction(`@${name}`, Types.String, callback);
-        f.addArgument(expectedType);
-
+        let f = new LavendeuxDecorator(name, expectedType, callback);
         this.allHandlers[f.registeredName] = f;
         this.decorators[name] = f.registeredName;
         return f;
