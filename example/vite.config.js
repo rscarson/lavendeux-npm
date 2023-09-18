@@ -9,11 +9,12 @@ export default defineConfig({
   test: {
   },
   build: {
-    minify: 'terser',
+    minify: 'esbuild',
     rollupOptions: {
       output: {
         banner: () => [
           '/*!',
+          ' * ',
           ' * This file is an extension for the Lavendeux parser',
           ' * https://rscarson.github.io/lavendeux/',
           ' * ',
@@ -26,7 +27,7 @@ export default defineConfig({
     },
     lib: {
       entry: resolve(__dirname, 'src/index.js'),
-      formats: ['es'],
+      formats: ['umd'],
       name: name,
       fileName() {
         return `${name}.js`;

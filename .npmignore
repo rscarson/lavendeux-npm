@@ -1,0 +1,12 @@
+coverage
+*.lcov
+node_modules/
+*.tsbuildinfo
+.npm
+.eslintcache
+.stylelintcache
+
+test
+example
+example_ts
+vite.config.js

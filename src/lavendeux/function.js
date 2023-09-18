@@ -1,5 +1,13 @@
 import { LavendeuxValue, Types } from './value';
 
+// Define the state in cases where the Lavendeux engine isn't available
+let WARNING_STATE_UNAVAILABLE, getState, setState;
+if (typeof getState === 'undefined') {
+    WARNING_STATE_UNAVAILABLE = true;
+    getState = () => {};
+    setState = () => {};
+}
+
 /**
  * A callable function for use in Lavendeux
  */
@@ -19,7 +27,7 @@ export class LavendeuxFunction {
      * Will be false in very old versions of Lavendeux
      */
     static isStateAvailable() {
-        return (typeof getState === "function");
+        return WARNING_STATE_UNAVAILABLE;
     }
 
     /**
@@ -122,10 +130,7 @@ export class LavendeuxFunction {
      * @returns State
      */
     getState() {
-        const state = LavendeuxFunction.isStateAvailable() 
-            ? getState() 
-            : {};
-
+        const state = getState();
         Object.keys(state).map(k => {
             state[k] = LavendeuxValue.unwrap(state[k]);
         });
@@ -137,12 +142,10 @@ export class LavendeuxFunction {
      * @param {Object} state 
      */
     setState(state) {
-        if (LavendeuxFunction.isStateAvailable()) {
-            Object.keys(state).map(k => {
-                state[k] = LavendeuxValue.wrap(state[k]);
-            });
-            setState(state);
-        }
+        Object.keys(state).map(k => {
+            state[k] = LavendeuxValue.wrap(state[k]);
+        });
+        setState(state);
     }
 
     call(argv) {

@@ -135,7 +135,7 @@ class LavendeuxCommand {
      * npm lavendeux build
      */
     static commandBuild(options) {
-        LavendeuxCommand.spawnNpm(['run', 'build']);
+        LavendeuxCommand.spawnNpm(['run', 'build', ...options]);
     }
 
     /**
@@ -143,7 +143,7 @@ class LavendeuxCommand {
      * npm lavendeux test
      */
     static commandTest(options) {
-        LavendeuxCommand.spawnNpm(['run', 'test']);
+        LavendeuxCommand.spawnNpm(['run', 'test', ...options]);
     }
 }
 
