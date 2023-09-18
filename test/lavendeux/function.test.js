@@ -81,29 +81,15 @@ describe('LavendeuxFunction', () => {
             {'Integer': 5}
         ]);
         expect(result).toBe(true);
-
-        result = false;
-        delete globalThis.getState;
-        delete globalThis.setState;
-        func.call([
-            {'Integer': 5}
-        ]);
-        expect(result).toBe(true);
-
-        globalThis._state = {};
-        globalThis.getState = () => {
-            return globalThis._state;
-        }
-        globalThis.setState = (state) => {
-            globalThis._state = state;
-        }
         
-        setState({'foo': {'String': 'bar'}});
         func = new LavendeuxFunction('test', Types.Any, (state) => {
-            expect(state.foo).toBe('bar');
-            state.foo = 'bar2';
+            state.foo = 'bar';
         });
         func.call([]);
-        expect(getState().foo).toStrictEqual({'String': 'bar2'});
+        
+        func = new LavendeuxFunction('test', Types.Any, (state) => {
+            expect(state.foo).toBe('bar');
+        });
+        func.call([]);
     });
 });

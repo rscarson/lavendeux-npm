@@ -9,7 +9,7 @@ export default defineConfig({
   test: {
   },
   build: {
-    minify: 'esbuild',
+    minify: false,
     rollupOptions: {
       output: {
         banner: () => [
@@ -27,7 +27,7 @@ export default defineConfig({
     },
     lib: {
       entry: resolve(__dirname, 'src/index.js'),
-      formats: ['umd'],
+      formats: ['es'],
       name: name,
       fileName() {
         return `${name}.js`;

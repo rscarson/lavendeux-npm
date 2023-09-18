@@ -1,11 +1,12 @@
 import { LavendeuxValue, Types } from './value';
 
 // Define the state in cases where the Lavendeux engine isn't available
-let WARNING_STATE_UNAVAILABLE, getState, setState;
+let WARNING_STATE_UNAVAILABLE, setState, getState;
 if (typeof getState === 'undefined') {
     WARNING_STATE_UNAVAILABLE = true;
-    getState = () => {};
-    setState = () => {};
+    const _lav_state = {};
+    getState = () => _lav_state;
+    setState = (s) => Object.assign(_lav_state,s);
 }
 
 /**
@@ -153,7 +154,7 @@ export class LavendeuxFunction {
         argv = this.decodeArguments(argv);
 
         // Populate the state
-        let state = this.getState()
+        let state = this.getState();
         
         // Run the inner callback function
         let value = LavendeuxValue.wrap(
