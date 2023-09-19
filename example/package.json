@@ -4,6 +4,9 @@
     "build": "vite build",
     "test": "vitest run"
   },
+  "dependencies": {
+    "lavendeux": "^1.2.2"
+  },
   "devDependencies": {
     "vite": "^4.2.1",
     "vitest": "^0.29.7"
@@ -12,8 +15,5 @@
   "version": "1.0.0",
   "description": "A sample Lavendeux extension",
   "author": "@rscarson",
-  "license": "ISC",
-  "dependencies": {
-    "lavendeux": "file:.."
-  }
+  "license": "ISC"
 }

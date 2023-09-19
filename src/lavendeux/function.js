@@ -115,7 +115,7 @@ export class LavendeuxFunction {
                 ( type == Types.Numeric && !([Types.Integer, Types.Float].includes(_type)) ) ||
                 [Types.Integer, Types.Float].includes(type) && type != _type
             ) {
-                throw new Error(`Invalid value for parameter ${i+1} of ${this.name}: Expected ${argv[i].type}`);
+                throw new Error(`Invalid type for parameter ${i+1} of ${this.name}: Expected ${type}`);
             }
         });
 

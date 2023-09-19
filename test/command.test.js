@@ -11,7 +11,7 @@ vi.mock('fs-extra');
 
 process.exit = vi.fn();
 
-import { LavendeuxCommand } from '../../src/lavendeux/command';
+import { LavendeuxCommand } from '../src/command';
 
 describe('LavendeuxCommand', () => {
     afterEach(() => {

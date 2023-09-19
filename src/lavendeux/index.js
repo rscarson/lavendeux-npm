@@ -46,9 +46,14 @@ export class Lavendeux {
 
     static register(instance) {
         globalThis.extension = () => instance.definition();
+        globalThis.extensionInstance = instance;
         Object.values(instance.allHandlers).forEach(f => {
             globalThis[f.registeredName] = (argv) => f.call(argv);
         });
+    }
+
+    static registeredInstance() {
+        return globalThis.extensionInstance;
     }
 
     /**
@@ -70,7 +75,7 @@ export class Lavendeux {
      * @returns Callback function 
      */
     getFunctionCallback(name) {
-        this.allHandlers[ this.functions[name] ].callback;
+        return this.allHandlers[ this.functions[name] ].callback;
     }
 
     /**
@@ -79,7 +84,7 @@ export class Lavendeux {
      * @returns Callback function 
      */
     getDecoratorCallback(name) {
-        this.allHandlers[ this.decorators[name] ].callback;
+        return this.allHandlers[ this.decorators[name] ].callback;
     }
 
     /**

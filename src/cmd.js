@@ -1,6 +1,6 @@
 #! /usr/bin/env node
-const { LavendeuxCommand } = require('./lavendeux/command');
-const { program } = require('commander');
+import { LavendeuxCommand } from './command.js';
+import { program } from 'commander';
 
 const data = LavendeuxCommand.getOwnConfig();
 

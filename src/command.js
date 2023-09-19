@@ -1,8 +1,12 @@
-const child_process = require("child_process");
-const path = require('path');
-const fs = require('fs-extra');
+import child_process from "child_process";
+import path from 'path';
+import fs from 'fs-extra';
+import { fileURLToPath } from 'url';
 
-class LavendeuxCommand {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export class LavendeuxCommand {
     static npmName = (process.platform == 'win32') ? 'npm.cmd' : 'npm';
     static spawnChild = (cmd, args) => child_process.spawnSync(cmd, args, { stdio: "inherit", stdin: "inherit" });
     static spawnNpm = (args) => this.spawnChild(this.npmName, args);
@@ -12,7 +16,8 @@ class LavendeuxCommand {
           "build": "vite build",
           "test": "vitest run"
         },
-    
+        
+        "dependencies": {},
         "devDependencies": {
           "vite": "^4.2.1",
           "vitest": "^0.29.7"
@@ -31,7 +36,7 @@ class LavendeuxCommand {
      * Returns the configuration of this package
      */
     static getOwnConfig() {
-        const targetFile = path.resolve(__dirname, '../../package.json');
+        const targetFile = path.resolve(__dirname, '../package.json');
         return JSON.parse(fs.readFileSync(targetFile, 'utf8'));
     }
 
@@ -107,7 +112,7 @@ class LavendeuxCommand {
      * Copy in the remaining files from the template
      */
     copyTemplate(ts=false) {
-        const template_path = ts ? '../../template' : '../../template_ts';
+        const template_path = ts ? '../../template_ts' : '../template';
         const scrDir = this.filePath(template_path, __dirname);
         fs.copySync(scrDir, this.targetDir);
     }
@@ -135,7 +140,7 @@ class LavendeuxCommand {
      * npm lavendeux build
      */
     static commandBuild(options) {
-        LavendeuxCommand.spawnNpm(['run', 'build', ...options]);
+        LavendeuxCommand.spawnNpm(['run', 'build', Object.keys(options).map(k => `--${k}`)]);
     }
 
     /**
@@ -143,8 +148,6 @@ class LavendeuxCommand {
      * npm lavendeux test
      */
     static commandTest(options) {
-        LavendeuxCommand.spawnNpm(['run', 'test', ...options]);
+        LavendeuxCommand.spawnNpm(['run', 'test', Object.keys(options).map(k => `--${k}`)]);
     }
 }
-
-module.exports = { LavendeuxCommand };
